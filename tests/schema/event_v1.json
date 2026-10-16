@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://star-office-ui.local/schemas/event_v1.json",
+  "title": "Star Office UI agent event, schema version 1 (ADR-035)",
+  "description": "The envelope every agent posts to POST /events. Required fields, types and version=1 are enforced here; the instant itself is parsed and normalised to naive UTC by backend/event_schema.py, because jsonschema only honours 'format' when an optional format-checker is installed (SOU-36 ruling). Extra top-level fields are allowed on purpose: ADR-035 asks for forward compatibility, so an older backend must keep accepting clients that grow.",
+  "type": "object",
+  "required": [
+    "version",
+    "agent",
+    "event_type",
+    "timestamp",
+    "payload"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Schema version of this envelope. Only 1 exists; any other value is refused so a v2 client cannot silently write v1-shaped rows.",
+      "$comment": "version=1"
+    },
+    "agent": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "pattern": "[^\\s]",
+      "description": "Agent identifier, e.g. hermes, openchamber, opencode, pi, claude. Mapped to agents.id; the first event from an unknown agent registers an agents row. maxLength mirrors agents.name (String(255), migration 001)."
+    },
+    "event_type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "[^\\s]",
+      "description": "Event type. Not a whitelist: ADR-035 wants new types (git_commit, api_call, web_scrape) to be addable without a schema change, so unknown values are stored as sent. maxLength mirrors events.event_type (String(100)).",
+      "$comment": "Initial registry (non-normative): tool_call, state_change, file_edit, command_run, itsaplan_issue_transition, session_start, session_end."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1,
+      "description": "When the event happened, ISO 8601 (e.g. 2026-10-13T14:20:55.653Z). An offset is honoured and normalised to UTC; a naive value is taken as UTC. Enforced by the validator module, not by 'format' alone."
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific data, stored as JSON in full (JSONB on Postgres, TEXT on SQLite). Kept under the size cap backend/event_schema.py documents.",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "star-office-reporter",
+  "version": "1.0.0",
+  "description": "Report Claude Code activity to a Star Office UI dashboard: tool calls, file edits, commands, sessions, background tasks and subagents (ADR-035 schema-v1 events). Stdlib only, non-blocking, privacy-safe.",
+  "author": {
+    "name": "Wojciech Gula",
+    "url": "https://github.com/gulasz101"
+  },
+  "homepage": "https://github.com/gulasz101/claude-code-star-office-reporter",
+  "repository": "https://github.com/gulasz101/claude-code-star-office-reporter",
+  "license": "MIT",
+  "keywords": [
+    "star-office",
+    "dashboard",
+    "hooks",
+    "pixel-art",
+    "activity"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "session_id": "0f0f9c3a-7d21-4b0e-9b3a-5d1c2a7e8811",
+  "transcript_path": "/home/owner/CANARY-DIR/.claude/projects/star-office-ui/0f0f.jsonl",
+  "cwd": "/home/owner/CANARY-DIR/src/star-office-ui",
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Edit",
+  "tool_use_id": "toolu_09XYZ",
+  "tool_input": {
+    "note": "CANARY-NO-PATH"
+  },
+  "tool_response": {
+    "ok": true
+  },
+  "duration_ms": 5
+}

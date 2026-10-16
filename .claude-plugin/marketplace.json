@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "gulasz101-star-office",
+  "owner": {
+    "name": "Wojciech Gula",
+    "url": "https://github.com/gulasz101"
+  },
+  "metadata": {
+    "description": "Star Office UI reporters for coding agents."
+  },
+  "plugins": [
+    {
+      "name": "star-office-reporter",
+      "source": "./",
+      "description": "Report Claude Code activity to a Star Office UI dashboard: tool calls, file edits, commands, sessions, background tasks and subagents (ADR-035 schema-v1 events). Stdlib only, non-blocking, privacy-safe.",
+      "version": "1.0.0",
+      "category": "productivity"
+    }
+  ]
+}

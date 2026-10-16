@@ -1,0 +1,6 @@
+{
+  "hook_event_name": "SessionStart",
+  "source": "startup",
+  "cwd": "/opt/CANARY-DIR/tools",
+  "transcript_path": "/home/owner/CANARY-DIR/.claude/projects/star-office-ui/0f0f.jsonl"
+}
