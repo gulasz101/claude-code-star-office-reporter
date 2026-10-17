@@ -95,6 +95,19 @@ All optional; set them in your shell profile or in the `env` block of
   subcommand tokens for well-known CLIs (`git push`, `npm run build`; flags, values,
   paths and URLs are skipped), opaque session/task ids and a few documented enum values.
 
+## Troubleshooting
+
+| Symptom | Check |
+|---|---|
+| No room appears | `STAR_OFFICE_URL` reachable from this machine (`curl $STAR_OFFICE_URL/health`); the plugin is enabled (`/plugin`); restart or `/reload-plugins` after installing. |
+| Room appears, then stops updating | The dashboard turned tokens on: set `STAR_OFFICE_TOKEN`. Run once with `STAR_OFFICE_DEBUG=1` and look for `401`/`403` on stderr. |
+| `403` in debug output | The token was minted for another agent name: it must match `STAR_OFFICE_AGENT`. |
+| Every event shows twice | An old hand-wired hooks block is still in `~/.claude/settings.json`. Remove it. |
+| Helpers never leave the room | Ends are noticed on the next hook call; an idle session closes them at `SessionEnd`, or as `stale` after 6 h. |
+
+The dashboard sanitises every payload again at its door, so even a misconfigured reporter
+cannot put more than the projection above on a public page.
+
 ## Development
 
 ```bash
