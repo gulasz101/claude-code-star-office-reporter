@@ -13,7 +13,7 @@
       "name": "star-office-reporter",
       "source": "./",
       "description": "Report Claude Code activity to a Star Office UI dashboard: tool calls, file edits, commands, sessions, background tasks and subagents (ADR-035 schema-v1 events). Stdlib only, non-blocking, privacy-safe.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "productivity"
     }
   ]

@@ -115,6 +115,7 @@ class StubServer:
                         "method": self.command,
                         "path": self.path,
                         "content_type": self.headers.get("Content-Type"),
+                        "authorization": self.headers.get("Authorization"),
                         "raw": raw,
                     }
                 )

@@ -79,6 +79,7 @@ All optional; set them in your shell profile or in the `env` block of
 | `STAR_OFFICE_URL`       | `http://127.0.0.1:19000`   | Dashboard base URL. Set it to an empty value to switch reporting off without uninstalling. |
 | `STAR_OFFICE_AGENT`     | `claude-code`              | Feed identity: the name your character and room get on the dashboard. |
 | `STAR_OFFICE_TIMEOUT`   | `2.0`                      | Network cap per event in seconds, clamped 0.25–10.     |
+| `STAR_OFFICE_TOKEN`     | unset                      | Per-agent ingest token, sent as `Authorization: Bearer`. Required once the dashboard sets `SOU_INGEST_TOKENS` (mint one with `uv run python backend/tokens.py new claude-code` in the dashboard repo). Never logged; debug output never shows it. |
 | `STAR_OFFICE_DEBUG`     | off                        | `1` echoes every envelope on stderr (never stdout).    |
 | `STAR_OFFICE_STATE_DIR` | `$XDG_STATE_HOME/star-office-reporter` | Where background-task bookkeeping lives. |
 
