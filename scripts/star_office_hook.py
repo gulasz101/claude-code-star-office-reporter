@@ -58,6 +58,9 @@ Configuration (all optional):
                                              reporting off without uninstalling)
     STAR_OFFICE_AGENT    feed identity        (default claude-code)
     STAR_OFFICE_TIMEOUT  network cap, seconds (default 2.0, clamped 0.25-10)
+    STAR_OFFICE_TOKEN    per-agent ingest token, sent as "Authorization: Bearer";
+                         required once the dashboard sets SOU_INGEST_TOKENS
+                         (SOU-219). Never logged, never echoed by debug.
     STAR_OFFICE_DEBUG    1 = echo the envelope on stderr, never on stdout
     STAR_OFFICE_STATE_DIR  where background-task state lives
                            (default $XDG_STATE_HOME/star-office-reporter)
@@ -403,14 +406,26 @@ def make_envelope(agent: str, event_type: str, payload: dict) -> dict:
     }
 
 
-def post_event(url: str, envelope: dict, timeout: float) -> None:
+TOKEN = re.compile(r"^[A-Za-z0-9._~+/=-]{8,512}$")
+
+
+def resolve_token(env) -> str:
+    """The ingest token, only when it is one header-safe word (no newlines, no spaces)."""
+    raw = (env.get("STAR_OFFICE_TOKEN") or "").strip()
+    return raw if TOKEN.match(raw) else ""
+
+
+def post_event(url: str, envelope: dict, timeout: float, token: str = "") -> None:
     """Best-effort POST. Every failure is a no-op; the office is not the job."""
     target = url.rstrip("/") + "/events"
     body = json.dumps(envelope).encode("utf-8")
     request = urllib.request.Request(
         target,
         data=body,
-        headers={"Content-Type": "application/json", "User-Agent": "claude-code-star-office-reporter/1.0"},
+        headers=dict(
+            {"Content-Type": "application/json", "User-Agent": "claude-code-star-office-reporter/1.1"},
+            **({"Authorization": f"Bearer {token}"} if token else {}),
+        ),
         method="POST",
     )
     with urllib.request.urlopen(request, timeout=timeout) as response:
@@ -557,6 +572,7 @@ def main(argv=None) -> int:
         return 0
 
     url, agent, timeout = resolve_config(env)
+    token = resolve_token(env)
     if url is None:
         return 0  # STAR_OFFICE_URL="" -> reporting off, silently
     events = []
@@ -575,7 +591,7 @@ def main(argv=None) -> int:
             # stderr only: stdout is Claude Code's decision channel and must stay empty.
             sys.stderr.write(json.dumps(envelope) + "\n")
         try:
-            post_event(url, envelope, timeout)
+            post_event(url, envelope, timeout, token)
         except BaseException:
             pass  # unreachable dashboard, refused event, TLS trouble: none of them ours
     return 0
